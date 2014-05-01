@@ -11,6 +11,7 @@ public:
     explicit Display7seg(QObject *parent = 0);
     
     void writeint(qint16 num);
+    void writeint_zeropad(qint16 num, quint8 pad);
 
 private:
     static const quint8 numbertable[];

@@ -80,3 +80,45 @@ void Display7seg::writeint(qint16 num)
     writeDisplay(6);
 
 }
+
+void Display7seg::writeint_zeropad(qint16 num,quint8 pad)
+{
+    quint16 res,absol;
+    qint16 aux[6];
+    quint8 sign;
+
+    int i;
+    for (i=0;i<6;i++)
+        aux[i] = 0;
+
+    for (i=0;i<pad;i++)
+            aux[i] = numbertable[0];
+
+    if (num < 0) {
+        sign = 1;
+        absol = (-num);
+    } else {
+        sign = 0;
+        absol = num;
+    }
+
+    for (i=0;i<6;i++) {
+        res = absol%10;
+        absol /= 10;
+        aux[i] = numbertable[res];
+        if (!absol) break;
+    }
+
+    if (sign && i<5) {
+        i++;
+        aux[pad] = 0x40;
+    }
+
+    for (i = 0; i < 6; i++) {
+        displaybuffer[i] = aux[i];
+    }
+
+
+    writeDisplay(6);
+
+}
