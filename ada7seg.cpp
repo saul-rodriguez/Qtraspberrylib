@@ -33,7 +33,7 @@ void Ada7Seg::writeint(qint16 num)
 
     int i;
     for (i = 0; i<4; i++)
-        aux[4] = 0;
+        aux[i] = 0;
 
     if (num < 0) {
         absol = -num;
