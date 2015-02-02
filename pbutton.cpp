@@ -24,3 +24,16 @@ void Pbutton::change_state(quint8 newstate)
 
     pin_state = newstate;
 }
+
+void Pbutton::on_off(quint8 newstate)
+{
+    quint8 aux;
+
+    if (newstate) {
+        aux = 0;
+    } else {
+        aux = 1;
+    }
+
+    emit button_changed(aux);
+}

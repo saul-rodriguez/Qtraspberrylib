@@ -6,6 +6,7 @@
 
 Mcp23017* p_extender_1;
 Mcp23017* p_extender_2;
+Mcp23017* p_extender_3;
 /*
  * Function: setupMcp23017_isr_1
  *-------------------------------
@@ -69,6 +70,9 @@ void extender1_isrB(void)
     //Here glue your logic
 }
 
+/*
+ * Extender2
+ */
 
 void setupMcp23017_isr_ext2(Mcp23017* pMcp23017)
 {
@@ -100,5 +104,43 @@ void extender2_isrB(void)
     //int change;
 
     p_extender_2->ISRB();
+}
+
+
+/*
+ * Extender3
+ */
+
+void setupMcp23017_isr_ext3(Mcp23017* pMcp23017)
+{
+    p_extender_3 = pMcp23017;
+
+    p_extender_3->setISR(PORTA,INTA_PINS3); //Only PORTA configured!
+    p_extender_3->setISR(PORTB,INTB_PINS3); //Only PORTB configured!
+
+    //Wire MCP interrupt pin in the raspberry to a function
+    wiringPiISR(MCP23017_3_INTA, INT_EDGE_FALLING, &extender3_isrA); //Only INTA configured!
+    wiringPiISR(MCP23017_3_INTB, INT_EDGE_FALLING, &extender3_isrB); //Only INTA configured!
+
+    p_extender_3->readPort(PORTA); // Dummy read to reset any glitch interrupt during setup
+    p_extender_3->readPort(PORTB); // Dummy read to reset any glitch interrupt during setup
+
+    p_extender_3->porta = p_extender_2->readPort(PORTA); // Dummy read to reset any glitch interrupt during setup
+    p_extender_3->portb =p_extender_2->readPort(PORTB); // Dummy read to reset any glitch interrupt during setup
+}
+
+void extender3_isrA(void)
+{
+    //int change;
+
+    p_extender_3->ISRA();
+}
+
+void extender3_isrB(void)
+{
+    //int change;
+    qDebug("EXT 3 INTB called");
+
+    p_extender_3->ISRB();
 }
 
